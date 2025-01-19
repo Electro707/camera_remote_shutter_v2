@@ -1,0 +1,17 @@
+(version 1)
+(rule USBCONN
+	(constraint clearance (min 5mil))
+	(condition "A.insideCourtyard('J8')")
+)
+(rule SmallIC1
+	(constraint clearance (min 6mil))
+	(condition "A.insideCourtyard('U1')")
+)
+(rule SmallIC2
+	(constraint clearance (min 6mil))
+	(condition "A.insideCourtyard('U4')")
+)
+(rule SmallIC3
+	(constraint clearance (min 5mil))
+	(condition "A.insideCourtyard('U6')")
+)
