@@ -3,7 +3,7 @@
 
 This is an open-source camera remote shutter.
 
-This is the second revision of the [original project](https://github.com/Electro707/camera_remote_shutter), and is treated as a seperate project.
+This was the second revision of the [original project](https://github.com/Electro707/camera_remote_shutter), but is now treated as a seperate project due to scope creep.
 
 There are many issue with Rev 1, still WIP.
 
