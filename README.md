@@ -1,4 +1,4 @@
-# P1040 - Camera Remote Shutter Project V2
+# P1010 - Camera Remote Shutter Project V2
 #### Rev 1
 
 This is an open-source camera remote shutter.
