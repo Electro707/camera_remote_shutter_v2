@@ -5,30 +5,29 @@ This is an open-source camera remote shutter.
 
 This was the second revision of the [original project](https://github.com/Electro707/camera_remote_shutter), but is now treated as a seperate project due to scope creep.
 
-~~There are many issue with Rev 1, still WIP.~~
-Currently working on Rev 2, which is smaller and fixed some issues with V1 (I think!)
+Currently working on Rev 2, which is smaller and fixed some issues with V1
 
-## PCB Artwork Revision
-As this project was initially the second revision of my original shutter controller, I put Rev2 as the rev on the PCB. As this is now a seperate project, it is really Rev 1.
+# Directory Structure
+- `CAD`: FreeCAD enclosure and models
+    - C1013: Bottom half of enclosure
+    - C1014: Top half of enclosure
+- `Firmware`: Firmware. Currently contains only test firmware
+- `PCB`: KiCAD PCB Files
+    - E1011: PCB
+- `Release`: Locked in "released" files, such as Schematics, Gerbers, etc
+- `SimTest`: A simulation I did in KiCAD for the trans-impedance amplifier
 
-## PCB Hardware Bugs
-The following hardware bugs are present on the PCB, and are required to be re-worked before usage
-
-- Rev 1 (Deprecated)
-    - Op-Amps were flipped
-- Rev 2
-    - PA11 (Pin 22) and PA9 (Pin 19) should be flipped.
-
-## Enclosure
-WIP
-
-There is a work-in-progress enclosure for the PCB under the [CAD](CAD) folder. The enclosure is made with FreeCAD 1.xx
+## Erratas
+All hardware erratas and potential work-arounds are documented in [ERRATA.md](ERRATA.md)
 
 ## Firmware
+WIP, currently only test firmware exists
 
-WIP
+### Setup
+This project uses [stm32-cmake](https://github.com/ObKo/stm32-cmake) in the build process, so you must set it up and change the `CMAKE_TOOLCHAIN_FILE` variable in each firmware's CMAKE file. You must also download [STM32G0's MCU Package](https://github.com/STMicroelectronics/STM32CubeG0) and set the `STM32_CUBE_G0_PATH` variable to the download location.
+Optionally if you have stm32cubeide installed, setup `STM32_TOOLCHAIN_PATH` in the CMAKE file, or remove it
 
-### Compiling and Programming
+### Compiling
 To build any of the test or main applications, go into that directory and run the following:
 ```bash
 mkdir -p build
@@ -37,6 +36,7 @@ cmake ../
 make
 ```
 
+### Programming
 To upload the program, run the following stlink command
 ```bash
 st-flash write <file_to_flash>.bin 0x08000000
