@@ -5,8 +5,8 @@
 
 #define EVER    ;;
 
-#define PIN_TIA_SEL_1        7      // pa7
-#define PIN_TIA_SEL_2        6      // pc6
+#define PIN_TIA_SEL_1        12      // pa12
+#define PIN_TIA_SEL_2        10      // pa10
 
 #define DISP_CS_GPIO_Port   GPIOB
 #define DISP_CS_Pin         LL_GPIO_PIN_4

@@ -78,20 +78,6 @@ void _gc9a01_reset(void){
 	LL_mDelay(200);
 }
 
-// void gc9a01_draw_rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color){
-// 	gc9a01_set_addr_window(x, y, x+width-1, y+height-1);
-
-// 	DISP_DC_0;
-// 	DISP_CS_0;
-// 	SPI_Write_Byte(0x2C);
-// 	DISP_DC_1;
-// 	for(int i=0;i<(width*height);i++){
-// 		SPI_Write_Byte(color & 0xFF);
-// 		SPI_Write_Byte(color >> 8);
-// 	}
-// 	DISP_CS_1;
-// }
-
 void gc9a01_draw_rect(boundingBox_t *textBox, uint32_t color){
 	uint16_t w = textBox->x1-textBox->x0;
 	uint16_t h = textBox->y1-textBox->y0;
@@ -126,6 +112,17 @@ void gc9a01_point(uint16_t x, uint16_t y, uint32_t color){
 	// gc9a01_set_addr_window(x, y, x, y);
 }
 
+/**
+ * @brief This function draws a 2d image, where each bit represents an off/on pixel
+ * 
+ * @param canvas The canvas array, of size (w/8)*h. Each bit is a pixel in the X direction.
+ * 				 So for a 128x64 display, the array would be [16*64]
+ * @param x0 The start x pos of the canvas
+ * @param y0 The start y pos of the canvas
+ * @param w The width of the canvas
+ * @param h The height of the canvas
+ * @param color The color to draw if a pixel is set
+ */
 void gc9a01_draw_bit_canvas(uint8_t *canvas, uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, uint32_t color){
 	uint8_t currBitColor;
 
@@ -164,7 +161,9 @@ void gc9a01_vert_line(uint16_t x, uint16_t y0, uint16_t y1, uint32_t color){
 }
 
 void gc9a01_line(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint32_t color){
-	// https://en.wikipedia.org/wiki/Bresenham's_line_algorithm#All_cases
+	// impletemented from:
+	// 		https://en.wikipedia.org/wiki/Bresenham's_line_algorithm#All_cases
+	//		https://zingl.github.io/Bresenham.pdf
 	int16_t dx = abs(x1-x0);
 	int16_t dy = -abs(y1-y0);
 	int16_t sx = x0 < x1 ? 1 : -1;
@@ -223,11 +222,12 @@ void gc9a01_fill_screen(uint32_t color){
 void gc9a01_print_text(const char *text, 
 					   uint16_t x, uint16_t y,
 					   uint16_t color, uint16_t bgColor,
-					   gc9a01_align_e alignMode, boundingBox_t *textBox){	
+					   gc9a01_align_e alignMode, boundingBox_t *textBox,
+					   uint8_t fontWidth, uint8_t fontHeight, uint32_t *fontLut){	
 	char currText;
 	uint32_t toSend;
 
-	uint16_t width = 16*strlen(text);
+	uint16_t width = fontWidth*strlen(text);
 	
 	if(alignMode == ALIGN_CENTER){
 		x -= width >> 1;		// width / 2
@@ -240,12 +240,13 @@ void gc9a01_print_text(const char *text,
 		textBox->x0 = x;
 		textBox->y0 = y;
 		textBox->x1 = x+width;
-		textBox->y1 = y+32;
+		textBox->y1 = y+fontHeight;
 	}
 
 	// X and Y are flipped as we are flipping it for writting
-	gc9a01_set_addr_window(y, x, y+31, x+width-1);
-	_gc9a01_send_single_cmd_data(DISP_CMD_MEMORY_ACCESS_CONTROL, 0x68);
+	// gc9a01_set_addr_window(x, y, x+width-1, y+fontHeight-1);
+	gc9a01_set_addr_window(y, x, y+fontHeight-1, x+width-1);
+	_gc9a01_send_single_cmd_data(DISP_CMD_MEMORY_ACCESS_CONTROL, 0xA8);
 
 	DISP_DC_0;
 	DISP_CS_0;
@@ -255,9 +256,9 @@ void gc9a01_print_text(const char *text,
 		currText = *text++;
 		currText -= 0x20;
 
-		for(int c=0;c<16;c++){
-			for(int r=0;r<32;r++){
-				toSend = spleenFont32[c + currText*16];
+		for(int c=0;c<fontWidth;c++){
+			for(int r=0;r<fontHeight;r++){
+				toSend = fontLut[c + currText*fontWidth];
 				toSend &= (1 << r);
 				if(toSend != 0){
 					toSend = color;
@@ -270,7 +271,26 @@ void gc9a01_print_text(const char *text,
 	}
 	DISP_CS_1;
 
-	_gc9a01_send_single_cmd_data(DISP_CMD_MEMORY_ACCESS_CONTROL, 0x48);
+	_gc9a01_send_single_cmd_data(DISP_CMD_MEMORY_ACCESS_CONTROL, 0x88);
+}
+
+void gc9a01_print_text_big(const char *text, 
+					   uint16_t x, uint16_t y,
+					   uint16_t color, uint16_t bgColor,
+					   gc9a01_align_e alignMode, boundingBox_t *textBox){	
+	gc9a01_print_text(text, x, y, color, bgColor, alignMode, textBox, 16, 32, spleenFont32);
+}
+void gc9a01_print_text_med(const char *text, 
+					   uint16_t x, uint16_t y,
+					   uint16_t color, uint16_t bgColor,
+					   gc9a01_align_e alignMode, boundingBox_t *textBox){	
+	gc9a01_print_text(text, x, y, color, bgColor, alignMode, textBox, 12, 24, spleenFont24);
+}
+void gc9a01_print_text_sma(const char *text, 
+					   uint16_t x, uint16_t y,
+					   uint16_t color, uint16_t bgColor,
+					   gc9a01_align_e alignMode, boundingBox_t *textBox){	
+	gc9a01_print_text(text, x, y, color, bgColor, alignMode, textBox, 8, 16, spleenFont16);
 }
 
 void gc9a01_init(void){
@@ -342,7 +362,7 @@ void gc9a01_init(void){
 	_gc9a01_send_single_cmd_data(DISP_CMD_PIXEL_FORMAT_SET, 0x05);
 
 	_gc9a01_send_cmd_and_data(DISP_CMD_DISPLAY_FUNCTION_CONTROL, (uint8_t[]){0x00, 0x00}, 2);
-	_gc9a01_send_single_cmd_data(DISP_CMD_MEMORY_ACCESS_CONTROL, 0x48);
+	_gc9a01_send_single_cmd_data(DISP_CMD_MEMORY_ACCESS_CONTROL, 0x88);
 
     _gc9a01_send_command(0x11);    //Exit Sleep
     LL_mDelay(120);
