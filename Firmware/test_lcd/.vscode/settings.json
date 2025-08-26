@@ -1,0 +1,26 @@
+{
+    "C_Cpp.default.browse.path": [
+        "/home/electro/STM32Cube/Repository/STM32CubeG0/Drivers/CMSIS/Device/ST/STM32G0xx/Source/Templates/gcc/",
+        "/home/electro/STM32Cube/Repository/STM32CubeG0/Drivers/STM32G0xx_HAL_Driver/Src/",
+        "${workspaceFolder}/gc9a01",
+        "${workspaceFolder}/lvgl/**"
+    ],
+    "C_Cpp.default.includePath": [
+        "/home/electro/STM32Cube/Repository/STM32CubeG0/Drivers/STM32G0xx_HAL_Driver/Inc/",
+        "/home/electro/STM32Cube/Repository/STM32CubeG0/Drivers/CMSIS/Device/ST/STM32G0xx/Include/",
+        "/home/electro/STM32Cube/Repository/STM32CubeG0/Drivers/CMSIS/Include/",
+        "${workspaceFolder}/gc9a01",
+        "${workspaceFolder}/lvgl/**"
+    ],
+    "files.associations": {
+        "stm32g0xx_ll_system.h": "c",
+        "stm32g0xx.h": "c",
+        "gc9a01.h": "c",
+        "stm32g0xx_ll_gpio.h": "c",
+        "lv_display_private.h": "c",
+        "lv_draw_sw_blend_private.h": "c"
+    },
+    "C_Cpp.default.defines": [
+        "STM32G071xx"
+    ]
+}

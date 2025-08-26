@@ -8,5 +8,5 @@
 # General .bak files
 *.bak
 *.nogit*
-# VSCode
-*/.vscode/
+# DrawIO Backups
+*.drawio.bkp

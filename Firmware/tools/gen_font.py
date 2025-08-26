@@ -1,4 +1,8 @@
 #!/bin/python3
+"""
+    Tool to generate the font LUT
+    This uses the font spleenFont in various sizes
+"""
 from PIL import Image, ImageFont, ImageDraw
 
 chars = list(range(0x20, 0x7F))

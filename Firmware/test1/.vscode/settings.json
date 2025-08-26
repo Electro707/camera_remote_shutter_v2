@@ -1,0 +1,18 @@
+{
+    "C_Cpp.default.browse.path": [
+        "/home/electro/STM32Cube/Repository/STM32CubeG0/Drivers/CMSIS/Device/ST/STM32G0xx/Source/Templates/gcc/",
+        "/home/electro/STM32Cube/Repository/STM32CubeG0/Drivers/STM32G0xx_HAL_Driver/Src/"
+    ],
+    "C_Cpp.default.includePath": [
+        "/home/electro/STM32Cube/Repository/STM32CubeG0/Drivers/STM32G0xx_HAL_Driver/Inc/",
+        "/home/electro/STM32Cube/Repository/STM32CubeG0/Drivers/CMSIS/Device/ST/STM32G0xx/Include/",
+        "/home/electro/STM32Cube/Repository/STM32CubeG0/Drivers/CMSIS/Include/"
+    ],
+    "files.associations": {
+        "stm32g0xx_ll_system.h": "c",
+        "stm32g0xx.h": "c"
+    },
+    "C_Cpp.default.defines": [
+        "STM32G071xx"
+    ]
+}
